@@ -12,8 +12,20 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import {CssBaseline, Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, styled} from "@mui/material";
-import {Category, ChevronLeft} from "@mui/icons-material";
+import {
+    Button,
+    CssBaseline,
+    Dialog, DialogActions, DialogContent,
+    DialogTitle,
+    Divider,
+    Drawer,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText, MenuItem,
+    styled, TextField
+} from "@mui/material";
+import {Category, ChevronLeft, PlusOne, Add} from "@mui/icons-material";
 import {useEffect} from "react";
 import Categories from "./Categories";
 import { useHistory } from "react-router-dom";
@@ -71,6 +83,15 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 function App() {
     const [open, setOpen] = React.useState(false);
     const [categories, setCategories] = React.useState([]);
+    const [newCatName, setNewCatName] = React.useState(null);
+    const [newCatUrl, setNewCatUrl] = React.useState(null);
+    const [addCategoryOpen, setAddCategoryOpen] = React.useState(false);
+    const [addProductOpen, setAddProductOpen] = React.useState(false);
+    const [newProductPrice, setNewProductPrice] = React.useState(null);
+    const [newProductName, setNewProductName] = React.useState(null);
+    const [newProductWeight, setNewProductWeight] = React.useState(null);
+    const [newProductStock, setNewProductStock] = React.useState(null);
+    const [newProductCat, setNewProductCat] = React.useState(null);
     const history = useHistory();
 
     const handleDrawerOpen = () => {
@@ -85,10 +106,34 @@ function App() {
         setOpen(false);
     };
 
-    useEffect(() => {
+    const loadCategories = () => {
         fetch(`${API_BASE_URL}/Categories`)
             .then(resp => resp.json())
             .then(data => setCategories(data))
+    }
+
+    const createCategory = () => {
+        setAddCategoryOpen(false);
+        fetch(`${API_BASE_URL}/Categories?Name=${newCatName}&Slug=${newCatUrl}`,
+            {method: 'PUT'})
+            .then(resp => resp.json())
+            .then(() => loadCategories())
+    }
+    const createProduct = () => {
+        setAddProductOpen(false);
+        fetch(`${API_BASE_URL}/Products?title=${newProductName}
+        &price=${newProductPrice}
+        &weight=${newProductWeight}
+        &stock=${newProductStock}
+        &categoryId=${newProductCat}`,
+            {method: 'PUT'})
+            .then(resp => resp.json())
+            .then(() => loadCategories())
+    }
+
+
+    useEffect(() => {
+        loadCategories();
     }, [])
 
     return (
@@ -141,6 +186,21 @@ function App() {
                           </ListItem>
                       ))}
                   </List>
+                  <Divider />
+                  <List>
+                      <ListItem button key={1} onClick={() => setAddCategoryOpen(true)}>
+                          <ListItemIcon>
+                              <Add/>
+                          </ListItemIcon>
+                          <ListItemText primary="Добавить категорию"/>
+                      </ListItem>
+                      <ListItem button key={1} onClick={() => setAddProductOpen(true)}>
+                          <ListItemIcon>
+                              <Add/>
+                          </ListItemIcon>
+                          <ListItemText primary="Добавить продукт"/>
+                      </ListItem>
+                  </List>
               </Drawer>
               <Main open={open}>
                   <Switch>
@@ -148,6 +208,7 @@ function App() {
                           <Categories
                               categories={categories}
                               goToCategory={goToCategory}
+                              loadCategories={loadCategories}
                           />
                       </Route>
                       <Route path="/:category">
@@ -155,6 +216,114 @@ function App() {
                       </Route>
                   </Switch>
               </Main>
+              <Dialog open={addCategoryOpen} onClose={() => setAddCategoryOpen(false)}>
+                  <DialogTitle>Добавить категорию</DialogTitle>
+                  <DialogContent>
+                      <TextField
+                          autoFocus
+                          margin="dense"
+                          id="name"
+                          label="Имя"
+                          fullWidth
+                          required
+                          value={newCatName}
+                          onChange={(e) =>
+                              setNewCatName(e.target.value)}
+                          variant="standard"
+                      />
+                      <TextField
+                          autoFocus
+                          margin="dense"
+                          id="url"
+                          label="Url"
+                          fullWidth
+                          value={newCatUrl}
+                          onChange={(e) =>
+                              setNewCatUrl(e.target.value)}
+                          required
+                          variant="standard"
+                      />
+                  </DialogContent>
+                  <DialogActions>
+                      <Button variant="contained" onClick={() => createCategory()}>Добавить</Button>
+                  </DialogActions>
+              </Dialog>
+              <Dialog open={addProductOpen} onClose={() => setAddProductOpen(false)}>
+                  <DialogTitle>Добавить продукт</DialogTitle>
+                  <DialogContent>
+                      <TextField
+                          autoFocus
+                          margin="dense"
+                          id="name"
+                          label="Имя"
+                          fullWidth
+                          required
+                          value={newProductName}
+                          onChange={(e) =>
+                              setNewProductName(e.target.value)}
+                          variant="standard"
+                      />
+                      <TextField
+                          autoFocus
+                          margin="dense"
+                          id="price"
+                          label="Цена"
+                          fullWidth
+                          type="number"
+                          value={newProductPrice}
+                          onChange={(e) =>
+                              setNewProductPrice(e.target.value)}
+                          required
+                          variant="standard"
+                      />
+                      <TextField
+                          autoFocus
+                          margin="dense"
+                          id="weight"
+                          label="Вес"
+                          fullWidth
+                          type="number"
+                          value={newProductWeight}
+                          onChange={(e) =>
+                              setNewProductWeight(e.target.value)}
+                          required
+                          variant="standard"
+                      />
+                      <TextField
+                          autoFocus
+                          margin="dense"
+                          id="stock"
+                          label="Наличие"
+                          fullWidth
+                          type="number"
+                          value={newProductStock}
+                          onChange={(e) =>
+                              setNewProductStock(e.target.value)}
+                          required
+                          variant="standard"
+                      /><br/>
+                      <TextField
+                          id="outlined-select-currency"
+                          select
+                          margin="dense"
+                          label="Категория"
+                          value={newProductCat}
+                          fullWidth
+                          variant="standard"
+                          onChange={(e) =>
+                              setNewProductCat(e.target.value)}
+                      >
+                          {categories.map((cat) => (
+                              <MenuItem key={cat.id} value={cat.id}>
+                                  {cat.title}
+                              </MenuItem>
+                          ))}
+                      </TextField>
+                  </DialogContent>
+                  <DialogActions>
+                      <Button variant="contained" onClick={() => createProduct()}>Добавить</Button>
+                  </DialogActions>
+              </Dialog>
           </Box>
   );
 }

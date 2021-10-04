@@ -3,6 +3,7 @@ import {Alert, Button, Card, CardActions, CardContent, Grid} from "@mui/material
 import Typography from "@mui/material/Typography";
 import { useParams } from "react-router-dom";
 import {useEffect} from "react";
+import {Delete} from "@mui/icons-material";
 const API_BASE_URL = 'http://localhost:58173';
 
 function Products(props) {
@@ -12,7 +13,7 @@ function Products(props) {
     const [error, setError] = React.useState(false);
 
     const loadProducts = () => {
-        fetch(`${API_BASE_URL}/Products?category=${category}`)
+        fetch(`${API_BASE_URL}/Products?categorySlug=${category}`)
             .then(resp => resp.json())
             .then(data => setProducts(data))
     }
@@ -26,6 +27,16 @@ function Products(props) {
                     loadProducts();
                 }else{
                     setError(true);
+                }
+            })
+    }
+
+    const remove = (id) => {
+        fetch(`${API_BASE_URL}/Products?id=${id}`, {method: 'DELETE'})
+            .then(resp => resp.json())
+            .then(data => {
+                if(data){
+                    loadProducts();
                 }
             })
     }
@@ -72,6 +83,9 @@ function Products(props) {
                                         variant="contained"
                                 >
                                     Купить
+                                </Button>
+                                <Button variant="contained" color='error' onClick={() => remove(product.id)}>
+                                    <Delete/>
                                 </Button>
                             </CardActions>
                         </Card>

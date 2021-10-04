@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a88dc5a9-a3ac-46d1-a041-4080be8c71a9" name="Default Changelist" comment="Добавлено отображене категорий и товаров">
+    <list default="true" id="a88dc5a9-a3ac-46d1-a041-4080be8c71a9" name="Default Changelist" comment="Пустые строки">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Categories.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Categories.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Products.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Products.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -68,7 +70,17 @@
       <option name="presentableId" value="Default" />
       <updated>1632143408350</updated>
       <workItem from="1632143409518" duration="11592000" />
+      <workItem from="1632199199662" duration="1939000" />
+      <workItem from="1633282351786" duration="8024000" />
     </task>
+    <task id="LOCAL-00001" summary="Пустые строки">
+      <created>1632161215930</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1632161215930</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -85,6 +97,10 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Пустые строки" />
+    <option name="LAST_COMMIT_MESSAGE" value="Пустые строки" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
