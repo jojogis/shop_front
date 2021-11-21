@@ -23,7 +23,8 @@ function Categories(props) {
 
 
     const remove = (id) => {
-        fetch(`${API_BASE_URL}/Categories?id=${id}`, {method: 'DELETE'})
+        fetch(`${API_BASE_URL}/Categories?id=${id}`,
+            {method: 'DELETE', headers: { "Authorization": "Bearer " + props.token}})
             .then(resp => resp.json())
             .then(data => {
                 if(data){
@@ -38,7 +39,7 @@ function Categories(props) {
     const forceRemove = () => {
         setRemoveConfirmOpen(false);
         fetch(`${API_BASE_URL}/Categories?id=${categoryToRemove}&deleteNotEmpty=true`,
-            {method: 'DELETE'})
+            {method: 'DELETE', headers: { "Authorization": "Bearer " + props.token}})
             .then(resp => resp.json())
             .then(data => {
                 if(data){
@@ -61,9 +62,12 @@ function Categories(props) {
                             <Button onClick={() => props.goToCategory(category.slug)} variant="contained">
                                 Посмотреть товары
                             </Button>
-                            <Button variant="contained" color='error' onClick={() => remove(category.id)}>
-                                <Delete/>
-                            </Button>
+                            {props.token !== null ?
+                                <Button variant="contained" color='error' onClick={() => remove(category.id)}>
+                                    <Delete/>
+                                </Button>
+                                : ''}
+
                         </CardActions>
                     </Card>
                 </Grid>

@@ -19,7 +19,8 @@ function Products(props) {
     }
 
     const buy = (id) => {
-        fetch(`${API_BASE_URL}/Products/Buy?id=${id}`, {method: 'POST'})
+        fetch(`${API_BASE_URL}/Products/Buy?id=${id}`,
+            {method: 'POST', headers: { "Authorization": "Bearer " + props.token}})
             .then(resp => resp.json())
             .then(data => {
                 if(data){
@@ -32,7 +33,8 @@ function Products(props) {
     }
 
     const remove = (id) => {
-        fetch(`${API_BASE_URL}/Products?id=${id}`, {method: 'DELETE'})
+        fetch(`${API_BASE_URL}/Products?id=${id}`,
+            {method: 'DELETE', headers: { "Authorization": "Bearer " + props.token}})
             .then(resp => resp.json())
             .then(data => {
                 if(data){
@@ -84,9 +86,12 @@ function Products(props) {
                                 >
                                     Купить
                                 </Button>
-                                <Button variant="contained" color='error' onClick={() => remove(product.id)}>
-                                    <Delete/>
-                                </Button>
+                                {props.token !== null ?
+                                    <Button variant="contained" color='error' onClick={() => remove(product.id)}>
+                                        <Delete/>
+                                    </Button>
+                                    : ''}
+
                             </CardActions>
                         </Card>
                     </Grid>

@@ -15,7 +15,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {
     Button,
     CssBaseline,
-    Dialog, DialogActions, DialogContent,
+    Dialog, DialogActions, DialogContent, DialogContentText,
     DialogTitle,
     Divider,
     Drawer,
@@ -25,7 +25,7 @@ import {
     ListItemText, MenuItem,
     styled, TextField
 } from "@mui/material";
-import {Category, ChevronLeft, PlusOne, Add} from "@mui/icons-material";
+import {Category, ChevronLeft, PlusOne, Add, VerifiedUserOutlined, AccountCircle, Logout} from "@mui/icons-material";
 import {useEffect} from "react";
 import Categories from "./Categories";
 import { useHistory } from "react-router-dom";
@@ -92,6 +92,11 @@ function App() {
     const [newProductWeight, setNewProductWeight] = React.useState(null);
     const [newProductStock, setNewProductStock] = React.useState(null);
     const [newProductCat, setNewProductCat] = React.useState(null);
+    const [authModalOpen, setAuthModalOpen] = React.useState(false);
+    const [login, setLogin] = React.useState(null);
+    const [password, setPassword] = React.useState(null);
+    const [errorAuth, setErrorAuth] = React.useState(false);
+    const [token, setToken] = React.useState(null);
     const history = useHistory();
 
     const handleDrawerOpen = () => {
@@ -112,10 +117,38 @@ function App() {
             .then(data => setCategories(data))
     }
 
+    const auth = () => {
+        fetch(`${API_BASE_URL}/Login?login=${login}&pass=${password}`,
+            {method: 'POST'})
+            .then(resp => resp.text())
+            .then(data => {
+                console.log(data);
+                if (data.length > 0) {
+                    setAuthModalOpen(false);
+                    setToken(data);
+                    setErrorAuth(false);
+                } else {
+                    setErrorAuth(true);
+                }
+
+            })
+    }
+
+    const logout = () => {
+        fetch(`${API_BASE_URL}/Logout`,
+            {method: 'POST', headers: { "Authorization": "Bearer " + token}})
+            .then(resp => resp.json())
+            .then(data => {
+                if (data) {
+                    setToken(null);
+                }
+            })
+    }
+
     const createCategory = () => {
         setAddCategoryOpen(false);
         fetch(`${API_BASE_URL}/Categories?Name=${newCatName}&Slug=${newCatUrl}`,
-            {method: 'PUT'})
+            {method: 'PUT', headers: { "Authorization": "Bearer " + token}})
             .then(resp => resp.json())
             .then(() => loadCategories())
     }
@@ -126,7 +159,7 @@ function App() {
         &weight=${newProductWeight}
         &stock=${newProductStock}
         &categoryId=${newProductCat}`,
-            {method: 'PUT'})
+            {method: 'PUT', headers: { "Authorization": "Bearer " + token}})
             .then(resp => resp.json())
             .then(() => loadCategories())
     }
@@ -140,7 +173,9 @@ function App() {
           <Box sx={{ display: 'flex' }}>
               <CssBaseline />
               <AppBar position="fixed" open={open}>
-                  <Toolbar>
+                  <Toolbar
+                    style={{width: '100%', justifyContent: 'space-between'}}
+                  >
                       <IconButton
                           color="inherit"
                           aria-label="open drawer"
@@ -153,6 +188,30 @@ function App() {
                       <Typography variant="h6" noWrap component="div">
                           Монитор4ики
                       </Typography>
+                      {token == null ?
+                          <IconButton
+                              color="inherit"
+                              aria-label="open drawer"
+                              onClick={() => setAuthModalOpen(true)}
+                              edge="end"
+                              style={{float: 'right'}}
+                              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+                          >
+                              <AccountCircle />
+                          </IconButton>
+                          :
+                          <IconButton
+                              color="inherit"
+                              aria-label="open drawer"
+                              onClick={() => logout()}
+                              edge="end"
+                              style={{float: 'right'}}
+                              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+                          >
+                              <Logout />
+                          </IconButton>
+                      }
+
                   </Toolbar>
               </AppBar>
               <Drawer
@@ -187,20 +246,23 @@ function App() {
                       ))}
                   </List>
                   <Divider />
-                  <List>
-                      <ListItem button key={1} onClick={() => setAddCategoryOpen(true)}>
-                          <ListItemIcon>
-                              <Add/>
-                          </ListItemIcon>
-                          <ListItemText primary="Добавить категорию"/>
-                      </ListItem>
-                      <ListItem button key={1} onClick={() => setAddProductOpen(true)}>
-                          <ListItemIcon>
-                              <Add/>
-                          </ListItemIcon>
-                          <ListItemText primary="Добавить продукт"/>
-                      </ListItem>
-                  </List>
+                  {token !== null ?
+                      <List>
+                          <ListItem button key={1} onClick={() => setAddCategoryOpen(true)}>
+                              <ListItemIcon>
+                                  <Add/>
+                              </ListItemIcon>
+                              <ListItemText primary="Добавить категорию"/>
+                          </ListItem>
+                          <ListItem button key={1} onClick={() => setAddProductOpen(true)}>
+                              <ListItemIcon>
+                                  <Add/>
+                              </ListItemIcon>
+                              <ListItemText primary="Добавить продукт"/>
+                          </ListItem>
+                      </List>
+                      : ''}
+
               </Drawer>
               <Main open={open}>
                   <Switch>
@@ -209,10 +271,11 @@ function App() {
                               categories={categories}
                               goToCategory={goToCategory}
                               loadCategories={loadCategories}
+                              token={token}
                           />
                       </Route>
                       <Route path="/:category">
-                          <Products/>
+                          <Products token={token}/>
                       </Route>
                   </Switch>
               </Main>
@@ -322,6 +385,49 @@ function App() {
                   </DialogContent>
                   <DialogActions>
                       <Button variant="contained" onClick={() => createProduct()}>Добавить</Button>
+                  </DialogActions>
+              </Dialog>
+              <Dialog
+                  open={authModalOpen}
+                  onClose={() => setAuthModalOpen(false)}
+              >
+                  <DialogTitle id="alert-dialog-title">
+                      Авторизация
+                  </DialogTitle>
+                  <DialogContent>
+                      <TextField
+                          autoFocus
+                          margin="dense"
+                          id="login"
+                          label="Логин"
+                          fullWidth
+                          type="text"
+                          value={login}
+                          error={errorAuth}
+                          onChange={(e) =>
+                              setLogin(e.target.value)}
+                          required
+                          variant="standard"
+                      />
+                      <TextField
+                          autoFocus
+                          margin="dense"
+                          id="password"
+                          label="Пароль"
+                          fullWidth
+                          type="password"
+                          value={password}
+                          error={errorAuth}
+                          onChange={(e) =>
+                              setPassword(e.target.value)}
+                          required
+                          variant="standard"
+                      />
+                  </DialogContent>
+                  <DialogActions>
+                      <Button color='success' onClick={() => auth()} variant="contained">
+                          Войти
+                      </Button>
                   </DialogActions>
               </Dialog>
           </Box>
