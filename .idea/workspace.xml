@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a88dc5a9-a3ac-46d1-a041-4080be8c71a9" name="Default Changelist" comment="Вторая лаба">
+    <list default="true" id="a88dc5a9-a3ac-46d1-a041-4080be8c71a9" name="Default Changelist" comment="Авторизация">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Categories.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Categories.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Products.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Products.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +31,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$/OneDrive/Рабочий стол/web4_chat-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -40,6 +39,11 @@
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="settings.editor.selected.configurable" value="settings.nodejs" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\alexe\WebstormProjects\shop_front\src" />
+    </key>
   </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
@@ -75,7 +79,9 @@
       <workItem from="1633282351786" duration="8311000" />
       <workItem from="1633377457050" duration="239000" />
       <workItem from="1637075834551" duration="50000" />
-      <workItem from="1637502313280" duration="4198000" />
+      <workItem from="1637502313280" duration="4598000" />
+      <workItem from="1637680471442" duration="60000" />
+      <workItem from="1638210995828" duration="3647000" />
     </task>
     <task id="LOCAL-00001" summary="Пустые строки">
       <created>1632161215930</created>
@@ -91,7 +97,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633375032981</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Авторизация">
+      <created>1637526849333</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1637526849333</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -112,7 +125,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Пустые строки" />
     <MESSAGE value="Вторая лаба" />
-    <option name="LAST_COMMIT_MESSAGE" value="Вторая лаба" />
+    <MESSAGE value="Авторизация" />
+    <option name="LAST_COMMIT_MESSAGE" value="Авторизация" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

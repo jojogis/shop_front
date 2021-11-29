@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
+    Autocomplete,
     Button,
     CssBaseline,
     Dialog, DialogActions, DialogContent, DialogContentText,
@@ -25,11 +26,22 @@ import {
     ListItemText, MenuItem,
     styled, TextField
 } from "@mui/material";
-import {Category, ChevronLeft, PlusOne, Add, VerifiedUserOutlined, AccountCircle, Logout} from "@mui/icons-material";
+import {
+    Category,
+    ChevronLeft,
+    PlusOne,
+    Add,
+    VerifiedUserOutlined,
+    AccountCircle,
+    Logout,
+    SearchRounded
+} from "@mui/icons-material";
 import {useEffect} from "react";
 import Categories from "./Categories";
 import { useHistory } from "react-router-dom";
 import Products from "./Products";
+import SearchModal from "./SearchModal";
+import Product from "./Product";
 
 const drawerWidth = 240;
 
@@ -97,6 +109,7 @@ function App() {
     const [password, setPassword] = React.useState(null);
     const [errorAuth, setErrorAuth] = React.useState(false);
     const [token, setToken] = React.useState(null);
+    const [showSearch, setShowSearch] = React.useState(false);
     const history = useHistory();
 
     const handleDrawerOpen = () => {
@@ -105,6 +118,14 @@ function App() {
 
     const goToCategory = (slug) => {
         history.push(`/${slug}`);
+    }
+
+    const goToProduct = (id) => {
+        history.push(`/product/${id}`);
+    }
+
+    const goToMain = () => {
+        history.push(`/`);
     }
 
     const handleDrawerClose = () => {
@@ -188,30 +209,43 @@ function App() {
                       <Typography variant="h6" noWrap component="div">
                           Монитор4ики
                       </Typography>
-                      {token == null ?
+                      <div>
                           <IconButton
                               color="inherit"
                               aria-label="open drawer"
-                              onClick={() => setAuthModalOpen(true)}
+                              onClick={() => setShowSearch(true)}
                               edge="end"
-                              style={{float: 'right'}}
-                              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+                              sx={{ mr: 2 }}
                           >
-                              <AccountCircle />
+                              <SearchRounded />
                           </IconButton>
-                          :
-                          <IconButton
-                              color="inherit"
-                              aria-label="open drawer"
-                              onClick={() => logout()}
-                              edge="end"
-                              style={{float: 'right'}}
-                              sx={{ mr: 2, ...(open && { display: 'none' }) }}
-                          >
-                              <Logout />
-                          </IconButton>
-                      }
-
+                          {showSearch ?
+                              <SearchModal
+                                  open={showSearch}
+                                  close={() => setShowSearch(false)}
+                                  goToProduct={goToProduct}
+                              />
+                              : ''}
+                          {token == null ?
+                              <IconButton
+                                  color="inherit"
+                                  aria-label="open drawer"
+                                  onClick={() => setAuthModalOpen(true)}
+                                  edge="end"
+                              >
+                                  <AccountCircle />
+                              </IconButton>
+                              :
+                              <IconButton
+                                  color="inherit"
+                                  aria-label="open drawer"
+                                  onClick={() => logout()}
+                                  edge="end"
+                              >
+                                  <Logout />
+                              </IconButton>
+                          }
+                      </div>
                   </Toolbar>
               </AppBar>
               <Drawer
@@ -273,6 +307,9 @@ function App() {
                               loadCategories={loadCategories}
                               token={token}
                           />
+                      </Route>
+                      <Route path="/product/:id">
+                          <Product token={token} goToMain={goToMain}/>
                       </Route>
                       <Route path="/:category">
                           <Products token={token}/>
